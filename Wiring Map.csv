@@ -1,0 +1,12 @@
+LAN8720 Pin,ESP32-S3 Pin,Notes
+VCC,3.3V,Do not use 5V!
+GND,GND,Common Ground
+TX1,GPIO 21,TX Data 1
+TX0,GPIO 19,TX Data 0
+TX_EN,GPIO 22,TX Enable
+RX1,GPIO 20,RX Data 1
+RX0,GPIO 14,RX Data 0
+CRS_DV,GPIO 27,Carrier Sense / Data Valid
+MDC,GPIO 23,Configured in INI
+MDIO,GPIO 18,Configured in INI
+nINT/RETCLK,GPIO 17,CRITICAL: ESP32 outputs 50MHz here
