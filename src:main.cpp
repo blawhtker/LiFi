@@ -61,3 +61,32 @@ void loop() {
     delay(5000);
   }
 }
+void loop() {
+    // 1. Poll Optical RX
+    RingbufHandle_t rb = NULL;
+    size_t num_items = 0;
+    rmt_get_ringbuf_handle(RMT_RX_CHANNEL, &rb);
+
+    if (rb) {
+        rmt_item32_t* items = (rmt_item32_t*) xRingbufferReceive(rb, &num_items, 0);
+        if (items) {
+            // We have raw pulses!
+            int item_count = num_items / sizeof(rmt_item32_t);
+            
+            // Prepare a buffer for the decoded Ethernet frame
+            uint8_t decoded_frame[1600]; 
+            
+            // Run the Decoder
+            int len = decode_manchester(items, item_count, decoded_frame);
+            
+            if (len > 0) {
+                Serial.printf("Decoded %d bytes from optical link!\n", len);
+                
+                // Inject into Ethernet (Send to Laptop)
+                eth_phy_inject(decoded_frame, len);
+            }
+
+            vRingbufferReturnItem(rb, (void*) items);
+        }
+    }
+}
